@@ -242,7 +242,7 @@ class Experiment2DBox:
         return 0
 
     def Gravity_Force(self, r, mi, mj):
-        soften_length = 0.1 # force softening length
+        soften_length = 0.05 # force softening length
         # softening kernel
         def S(r):
             # Plummer core

@@ -9,7 +9,7 @@ particle_num = 100
 max_vi = 1.5    # init velocity
 delta_t = 0.005
 mybox = Experiment2DBox(box_shape, particle_num, max_vi, potential='Gravity')
-tstep = 2000
+tstep = 8000
 
 ## Animation Create
 fig = plt.figure()
@@ -40,6 +40,5 @@ def updateFrame(frame, box, delta_t):
 
 
 ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(1, tstep), interval=10, fargs=(mybox, delta_t), blit=True)
+plt.show()
 ani.save('demo.mp4')
-#plt.show()
-

@@ -44,6 +44,7 @@ class ExperimentBox:
     sigma = 1
     k_b = 1
     G = 1   # Gravitation Constant
+    h_f = 0.05 # friction parameter
     # -----------------
     # --- something ---
     particles = []
@@ -149,9 +150,11 @@ class ExperimentBox:
         # copy up-right to down-left
         # calc force by sum column
         sumMatrix = ForceMatrix.sum(axis=0)
-        
+
         for j in range(self.particle_num):
-            self.particles[j].giveAccForce(sumMatrix[j])
+            pj = self.particles[j]
+            sumMatrix[j] += self.hubbleFriction(pj)   # Friction Terms
+            pj.giveAccForce(sumMatrix[j])
     
     def update(self, t):
         # update one frame by time interval t
@@ -219,3 +222,7 @@ class ExperimentBox:
                     break
             if isRemoved: break
         if isRemoved: self.doMerge()
+
+    def hubbleFriction(self, pi):
+        # hubble friction
+        return - self.h_f * pi.v

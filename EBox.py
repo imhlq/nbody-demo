@@ -1,6 +1,8 @@
 # Experiment Box Class
 import numpy as np
 from scipy.stats import truncnorm
+from multiprocessing import Pool
+
 class Particle:
     m = 1   # mass
     def __init__(self, x, y):
@@ -145,6 +147,7 @@ class Experiment2DBox:
         print('Box initization finished.')
     
 
+            
 
     def calcAllForces(self):
         for pi in self.particles:
@@ -264,3 +267,4 @@ class Experiment2DBox:
         dy = min(dy_0, dy_0 + self.box_size[1], dy_0 - self.box_size[1], key=abs)
         # return r,dx,dy
         return np.sqrt(np.power(dx, 2) + np.power(dy, 2)), dx, dy
+  

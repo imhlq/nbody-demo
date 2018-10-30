@@ -1,18 +1,20 @@
-from EBox import Experiment2DBox
+from Ebox2 import ExperimentBox
 import numpy as np
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 
 #### Change Parameter Here ####
-box_shape = {'type': 'normal', 'box_size': (20, 20)}    # shape of Box (W * H)
+box_size = (20, 20)    # shape of Box (W * H)
 particle_num = 20  # Initial Total Number of particle
 max_vi = 1.5    # Init velocity
-delta_t = 0.005 # Time interval
+delta_t = 0.01 # Time interval
 tstep = 8000    # Flame
 
 #### Dont change below if you don't know #### 
 
-mybox = Experiment2DBox(box_shape, particle_num, max_vi, potential='Gravity')
+mybox = ExperimentBox(box_size, potential='Gravity')
+mybox.initParticles(particle_num, max_vi)
+
 ## Animation Create
 fig = plt.figure()
 ax = plt.axes(xlim=(0, mybox.box_size[0]), ylim=(0, mybox.box_size[1]))
@@ -27,20 +29,20 @@ def updateFrame(frame, box, delta_t):
     sdata = []
     # get all position
     for p in box.particles:
-        xdata.append(p.x)
-        ydata.append(p.y)
+        xdata.append(p.r[0])
+        ydata.append(p.r[1])
         # size
         s = 10 * p.m
         sdata.append(s)
     data = np.c_[xdata, ydata]
     sca.set_offsets(data)
     sca._sizes = sdata
-    box.goRun(delta_t)
-    print(frame)
+    text.set_text(mybox.time)
+    box.update(delta_t)
     return sca,
 
 
 
-ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(1, tstep), interval=10, fargs=(mybox, delta_t), blit=True)
+ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(1, tstep), interval=10, fargs=(mybox, delta_t))
 plt.show()
-ani.save('demo.mp4')
+#ani.save('demo.mp4')

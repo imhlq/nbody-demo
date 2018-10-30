@@ -40,7 +40,7 @@ class Particle:
         # previous point should shift with new point to get correct velocity
         self.r = self.r % bounds
 
-class Experiment2DBox:
+class ExperimentBox:
     # --- Parameter ---
     epsion = 1
     sigma = 1
@@ -50,7 +50,7 @@ class Experiment2DBox:
     # --- something ---
     particles = []
     # -----------------
-    def __init__(self, box_size, potential='Lennar-Jones'):
+    def __init__(self, box_size, potential='Gravity'):
         # Initize Box
         ''' 
         Provide:
@@ -67,6 +67,9 @@ class Experiment2DBox:
             self.force = self.Lennar_Force
         elif potential == 'Gravity':
             self.force = self.Gravity_Force
+        else:
+            print('Please give right potential!')
+            exit()
 
         # Running Parameter
         self.time = 0   # actual time
@@ -118,7 +121,7 @@ class Experiment2DBox:
                     anti = None
             # =====================================
             # initial mass(follow poisson mass function)
-            newParticle.m = np.random.poisson(lam=1)
+            newParticle.m = np.random.poisson(lam=1) + 0.1
 
             # Append to System
             self.particles.append(newParticle)
@@ -135,11 +138,13 @@ class Experiment2DBox:
     def calcForces(self, Parallal=True):
         # Multi-core Parallal calculation!
         pool = Pool()
-        ForceMatrix = pool.map(self.calcRowForce, range(len(self.particle_num)))
+        ForceMatrix = pool.map(self.calcRowForce, range(self.particle_num))
+        pool.close()
+        pool.join() # sync (wait terminate)
         # Calculate over
 
         ForceMatrix = np.array(ForceMatrix)
-        ForceMatrix += np.transpose(ForceMatrix, axes=(1, 0, 2))    # assume diag always zero
+        ForceMatrix += - np.transpose(ForceMatrix, axes=(1, 0, 2))    # assume diag always zero
         # copy up-right to down-left
         # calc force by sum column
         sumMatrix = ForceMatrix.sum(axis=0)

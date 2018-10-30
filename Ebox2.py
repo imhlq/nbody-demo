@@ -125,7 +125,7 @@ class ExperimentBox:
             self.particles.append(newParticle)
         print('Particles initization finished.')
 
-
+    # Idea From Nvdia Gem3
     def calcRowForce(self, i):
         row_data = np.zeros((self.particle_num, self.Dim))
         pi = self.particles[i]
@@ -133,13 +133,16 @@ class ExperimentBox:
             row_data[j] = self.force(pi, self.particles[j]) # get N*dim array
         return row_data
 
-    def calcForces(self, Parallal=True):
-        # Multi-core Parallal calculation!
-        pool = Pool()
-        ForceMatrix = pool.map(self.calcRowForce, range(self.particle_num))
-        pool.close()
-        pool.join() # sync (wait terminate)
-        # Calculate over
+    def calcForces(self, Parallal=False):
+        if Parallal:
+            # Multi-core Parallal calculation! Too slow??!! Why!
+            pool = Pool()
+            ForceMatrix = pool.map(self.calcRowForce, range(self.particle_num))
+            pool.close()
+            pool.join() # sync (wait terminate)
+            # Calculate over
+        else:
+            ForceMatrix = list(map(self.calcRowForce, range(self.particle_num)))
 
         ForceMatrix = np.array(ForceMatrix)
         ForceMatrix += - np.transpose(ForceMatrix, axes=(1, 0, 2))    # assume diag always zero

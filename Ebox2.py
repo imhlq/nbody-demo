@@ -27,8 +27,6 @@ class Particle:
             self.pr = self.r - self.v * t
         
         tmp_r = 2*self.r - self.pr + self.a * t * t
-        
-        # update speed
         self.v = (tmp_r - self.pr) / (2*t) # x(n+1) - x(n-1)
 
         # save pervious position

@@ -189,3 +189,32 @@ class ExperimentBox:
             return self.G * np.power(r2, -3/2) * (pi.r - pj.r)
     # ========================================================================
     # ========================================================================
+
+    # below functions are not used yet
+    def closestDistence(self, pi, pj):
+        # the closest image distence of particle i and j
+        # normal distence
+        dr_0 = pi.r - pj.r
+        # !!
+        dr = min(dr_0, dr_0 + self.box_size[0], dr_0 - self.box_size[0], key=abs)
+        # return r,dx,dy
+        return np.sqrt(np.power(dr,2))
+
+    def doMerge(self):
+        isRemoved = False
+        for pi in self.particles:
+            for pj in self.particles:
+                if pi == pj: continue
+                rij, _, _ = self.closestDistence(pi, pj)
+                if rij < 0.1 * self.sigma * np.power(pi.m + pj.m, 1/3):  # merge distance
+                    r_center = (pi.r * pi.m).sum() / (pi.m + pj.m)
+                    newP = Particle(r_center)
+                    newP.m = pi.m + pj.m
+                    newP.v = (pi.v * pi.m).sum() / (pi.m + pj.m)
+                    self.particles.append(newP)
+                    self.particles.remove(pi)
+                    self.particles.remove(pj)
+                    isRemoved = True
+                    break
+            if isRemoved: break
+        if isRemoved: self.doMerge()

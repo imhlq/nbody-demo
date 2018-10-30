@@ -1,6 +1,7 @@
 # N-body Simulation Demo
 
-- 2D Box
+- **N-Dim Box**
 - Periodic boundary condition
 - Softening kernel
 - Collisionless system
+- **Parallal Computation**

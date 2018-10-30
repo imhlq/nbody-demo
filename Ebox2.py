@@ -44,7 +44,7 @@ class ExperimentBox:
     sigma = 1
     k_b = 1
     G = 1   # Gravitation Constant
-    h_f = 0.05 # friction parameter
+    h_f = 0.5 # hubble friction parameter
     # -----------------
     # --- something ---
     particles = []

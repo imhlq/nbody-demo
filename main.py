@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 #### Change Parameter Here ####
 box_size = (20, 20)    # shape of Box (W * H)
 particle_num = 100  # Initial Total Number of particle
-max_vi = 1.5    # Init velocity
+max_vi = 1.0    # Init velocity
 delta_t = 0.005 # Time interval
-tstep = 1000    # Frame
+tstep = 5000    # How many Frame
 
-#### Dont change below if you don't know #### 
+#### Dont change below if you don't know ## ## 
 
 mybox = ExperimentBox(box_size, potential='Gravity')
 mybox.initParticles(particle_num, max_vi)
@@ -43,6 +43,6 @@ def updateFrame(frame, box, delta_t):
     return sca,
 
 
-ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(1, tstep), interval=20, fargs=(mybox, delta_t), blit=True)
+ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(1, tstep), interval=10, fargs=(mybox, delta_t), blit=True)
 #plt.show()
 ani.save('demo.mp4')

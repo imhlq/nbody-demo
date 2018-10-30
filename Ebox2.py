@@ -120,8 +120,8 @@ class ExperimentBox:
                     newParticle.v = anti
                     anti = None
             # =====================================
-            # initial mass(follow poisson mass function)
-            newParticle.m = np.random.poisson(lam=1) + 0.1
+            # initial mass(follow uniform mass function)
+            newParticle.m = np.random.uniform(1, 10)
 
             # Append to System
             self.particles.append(newParticle)

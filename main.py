@@ -8,7 +8,7 @@ box_size = (20, 20)    # shape of Box (W * H)
 particle_num = 20  # Initial Total Number of particle
 max_vi = 1.5    # Init velocity
 delta_t = 0.01 # Time interval
-tstep = 8000    # Flame
+tstep = 1000    # Flame
 
 #### Dont change below if you don't know #### 
 
@@ -39,10 +39,10 @@ def updateFrame(frame, box, delta_t):
     sca._sizes = sdata
     text.set_text(mybox.time)
     box.update(delta_t)
+    print(frame)
     return sca,
 
 
-
-ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(1, tstep), interval=10, fargs=(mybox, delta_t))
-plt.show()
-#ani.save('demo.mp4')
+ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(1, tstep), interval=10, fargs=(mybox, delta_t), blit=True)
+#plt.show()
+ani.save('demo.mp4')

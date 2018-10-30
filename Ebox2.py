@@ -120,7 +120,7 @@ class ExperimentBox:
                     anti = None
             # =====================================
             # initial mass(follow uniform mass function)
-            newParticle.m = np.random.uniform(1, 10)
+            #newParticle.m = np.random.uniform(1, 10)
 
             # Append to System
             self.particles.append(newParticle)

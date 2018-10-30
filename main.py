@@ -32,7 +32,7 @@ def updateFrame(frame, box, delta_t):
         xdata.append(p.r[0])
         ydata.append(p.r[1])
         # size
-        s = 10 * p.m
+        s = 15 * p.m
         sdata.append(s)
     data = np.c_[xdata, ydata]
     sca.set_offsets(data)
@@ -44,5 +44,5 @@ def updateFrame(frame, box, delta_t):
 
 
 ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(1, tstep), interval=10, fargs=(mybox, delta_t), blit=True)
-#plt.show()
-ani.save('demo.mp4')
+plt.show()
+#ani.save('demo.mp4')

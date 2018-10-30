@@ -2,8 +2,6 @@
 # Version 2
 
 import numpy as np
-from scipy.stats import truncnorm
-
 from multiprocessing import Pool
 
 # Class N-dim Particle
@@ -51,7 +49,6 @@ class Experiment2DBox:
     # -----------------
     # --- something ---
     particles = []
-    
     # -----------------
     def __init__(self, box_size, potential='Lennar-Jones'):
         # Initize Box
@@ -63,7 +60,6 @@ class Experiment2DBox:
         # ################################ #
         # Define Size of box
         self.box_size = box_size
-        # Dimension of Box
         self.Dim = len(self.box_size)   
 
         # Define potential(force) of box
@@ -71,6 +67,10 @@ class Experiment2DBox:
             self.force = self.Lennar_Force
         elif potential == 'Gravity':
             self.force = self.Gravity_Force
+
+        # Running Parameter
+        self.time = 0   # actual time
+        self.time_n = 0 # times of update
         
 
 
@@ -125,13 +125,44 @@ class Experiment2DBox:
         print('Particles initization finished.')
 
 
+    def calcRowForce(self, i):
+        row_data = np.zeros((self.particle_num, self.Dim))
+        pi = self.particles[i]
+        for j in range(i+1, self.particle_num):
+            row_data[j] = self.force(pi, self.particles[j]) # get N*dim array
+        return row_data
+
     def calcForces(self, Parallal=True):
-        # Multi-core calculation
-        pass
+        # Multi-core Parallal calculation!
+        pool = Pool()
+        ForceMatrix = pool.map(self.calcRowForce, range(len(self.particle_num)))
+        # Calculate over
+
+        ForceMatrix = np.array(ForceMatrix)
+        ForceMatrix += np.transpose(ForceMatrix, axes=(1, 0, 2))    # assume diag always zero
+        # copy up-right to down-left
+        # calc force by sum column
+        sumMatrix = ForceMatrix.sum(axis=0)
+        
+        for j in range(self.particle_num):
+            self.particles[j].giveAccForce(sumMatrix[j])
+    
+    def update(self, t):
+        # update one frame by time interval t
+        self.calcForces()
+        for p in self.particles:
+            p.updatePos(t, self.box_size)
+
+        # Measurement code here
+        # ...
+        
+        # count
+        self.time += t
+        self.time_n += 1
 
 
-    # ============================================
-    # ============ Type of Force =================
+    # ===========================================================================
+    # ============ Type of Force ================================================
     def Lennar_Force(self, pi, pj):
         # Analytical devirivative F = -D U(r)
         r = np.sqrt(np.sum(np.power(pi.r - pj.r, 2)))
@@ -141,6 +172,8 @@ class Experiment2DBox:
 
     def Gravity_Force(self, pi, pj):
         # force i to j
+        if pi == pj:
+            return np.zeros(self.Dim)
         soften_length = 1/20 # force softening length
         r2 = np.sum(np.power(pi.r - pj.r, 2))
         # Plummer core
@@ -149,5 +182,5 @@ class Experiment2DBox:
             return self.G * np.power(r2 + sl2, -3/2) * (pi.r - pj.r)
         else:
             return self.G * np.power(r2, -3/2) * (pi.r - pj.r)
-    # =============================================
-    # =============================================
+    # ========================================================================
+    # ========================================================================

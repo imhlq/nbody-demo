@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 box_size = (10, 10)    # shape of Box (W * H)
 particle_num = 400  # Initial Total Number of particle
 max_vi = 0.3   # Init velocity
-delta_t = 0.00001 # Time interval
+delta_t = 0.0001 # Time interval
 tstep = 1000    # How many Frame
 
 #### Dont change below if you don't know ## ## 
@@ -38,12 +38,12 @@ def updateFrame(frame, box, delta_t):
     sca.set_offsets(data)
     sca._sizes = sdata
     text.set_text('%.2f' % mybox.time)
-    for i in range(1,5):
+    for _ in range(5):
         box.update(delta_t) # update
     print(frame)
     return sca,
 
 
-ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(1, tstep), interval=10, fargs=(mybox, delta_t), blit=True)
+ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(tstep), interval=10, fargs=(mybox, delta_t), blit=True)
 #plt.show()
 ani.save('demo.mp4')

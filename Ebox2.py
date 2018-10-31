@@ -169,7 +169,9 @@ class ExperimentBox:
         self.time += t
         self.time_n += 1
 
-
+    def hubbleFriction(self, pi):
+        # hubble friction
+        return - self.h_f * pi.v
     # ===========================================================================
     # ============ Type of Force ================================================
     def Lennar_Force(self, pi, pj):
@@ -199,8 +201,8 @@ class ExperimentBox:
         # the closest image distence of particle i and j
         # normal distence
         dr_0 = pi.r - pj.r
-        # !!
-        dr = min(dr_0, dr_0 + self.box_size[0], dr_0 - self.box_size[0], key=abs)
+        
+        dr = min(dr_0, dr_0 + self.box_size, dr_0 - self.box_size, key=abs)
         # return r,dx,dy
         return np.sqrt(np.power(dr,2))
 
@@ -223,6 +225,4 @@ class ExperimentBox:
             if isRemoved: break
         if isRemoved: self.doMerge()
 
-    def hubbleFriction(self, pi):
-        # hubble friction
-        return - self.h_f * pi.v
+    

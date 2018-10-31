@@ -1,21 +1,38 @@
 from Ebox2 import ExperimentBox
 import numpy as np
-import matplotlib.animation as animation
-import matplotlib.pyplot as plt
+import pandas as pd
+# import matplotlib.animation as animation
+# import matplotlib.pyplot as plt
 
 #### Change Parameter Here ####
-box_size = (10, 10)    # shape of Box (W * H)
+box_size = (10, 10, 10)    # shape of Box (W * H)
 particle_num = 30  # Initial Total Number of particle
 max_vi = 0.3   # Init velocity
 delta_t = 0.001 # Time interval
-tstep = 1000    # How many Frame
+tstep = 100    # How many Frame
 
 #### Dont change below if you don't know ## ## 
 
 mybox = ExperimentBox(box_size, potential='Gravity')
 mybox.initParticles(particle_num, max_vi)
 
-## Animation Create
+final = []
+for i in range(tstep):
+    pos = []
+    t = mybox.time
+    for p in mybox.particles:
+        pos.append(p.r)
+    final.append({'t':t, 'pos':pos})
+    mybox.update(delta_t)
+    print(i)
+final = pd.DataFrame(final)
+final.set_index('t', inplace=True)
+print(final)
+with open('Data.pkl', 'wb') as fp:
+    final.to_pickle(fp)
+
+'''
+## Animation Create 2D
 fig = plt.figure()
 ax = plt.axes(xlim=(0, mybox.box_size[0]), ylim=(0, mybox.box_size[1]))
 x, y, c = np.random.random((3, mybox.particle_num))
@@ -47,3 +64,4 @@ def updateFrame(frame, box, delta_t):
 ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(tstep), interval=20, fargs=(mybox, delta_t), blit=True)
 #plt.show()
 ani.save('demo.mp4')
+'''

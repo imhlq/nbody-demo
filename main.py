@@ -7,7 +7,7 @@ import pandas as pd
 #### Change Parameter Here ####
 box_size = (10, 10, 10)    # shape of Box (W * H)
 particle_num = 30  # Initial Total Number of particle
-max_vi = 0.3   # Init velocity
+max_vi = 2.3   # Init velocity
 delta_t = 0.001 # Time interval
 tstep = 100    # How many Frame
 n_time = 1      # how many update to get one frame
@@ -15,7 +15,7 @@ n_time = 1      # how many update to get one frame
 Soften_length = 0.1
 Hubble_friction_constant = 0.5
 GravityConstant = 1
-Particle_mass = 1
+Particle_mass = 0.25
 
 #### Dont change below if you don't know ## ## 
 
@@ -25,16 +25,19 @@ mybox.setParameter(G=GravityConstant, m=Particle_mass, soften_length=Soften_leng
 
 final = []
 for i in range(tstep):
-    pos = []
+    _posr = np.zeros((len(box_size), particle_num))
     t = mybox.time
-    for p in mybox.particles:
-        pos.append(p.r)
-    final.append({'t':t, 'pos':pos})
+    for i_p in range(mybox.particle_num):
+        p = mybox.particles[i_p]
+        for i_d in range(len(p.r)):
+            _posr[i_d][i_p] = p.r[i_d]
+
+    final.append({'t':t, 'pos':_posr})
     mybox.updateN(delta_t, n_time)
     print(i)
 final = pd.DataFrame(final)
 final.set_index('t', inplace=True)
-print(final)
+
 with open('Data.pkl', 'wb') as fp:
     final.to_pickle(fp)
 

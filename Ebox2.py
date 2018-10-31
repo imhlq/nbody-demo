@@ -45,6 +45,7 @@ class ExperimentBox:
     k_b = 1
     G = 1   # Gravitation Constant
     h_f = 0.5 # hubble friction parameter
+    m = 1
 
     soften_length = 0.1
     # -----------------

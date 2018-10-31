@@ -186,11 +186,12 @@ class ExperimentBox:
         if pi == pj:
             return np.zeros(self.Dim)
         soften_length = 1.0/10.0 # force softening length
-        r2 = np.sum(np.power(pi.r - pj.r, 2))
+        dr = self.closestDistence(pi, pj) # with cloest distance relation
+        dr2 = np.sum(np.power(dr, 2))
         # Plummer core
         sl2 = soften_length * soften_length
             #if r2 < sl2:    WL: We don't need to distinguish the two case
-        return self.G * np.power(r2 + sl2, -3/2) * (pi.r - pj.r)
+        return self.G * np.power(dr2 + sl2, -3/2) * (dr)
             #else:
             #return self.G * np.power(r2, -3/2) * (pi.r - pj.r)
     # ========================================================================
@@ -199,12 +200,15 @@ class ExperimentBox:
     # below functions are not used yet
     def closestDistence(self, pi, pj):
         # the closest image distence of particle i and j
-        # normal distence
+        # move j to closest position
         dr_0 = pi.r - pj.r
-        
-        dr = min(dr_0, dr_0 + self.box_size, dr_0 - self.box_size, key=abs)
-        # return r,dx,dy
-        return np.sqrt(np.power(dr,2))
+        for i in range(len(dr_0)):
+            if dr_0[i] < self.box_size[i] / 2:
+                dr_0[i] += self.box_size[i]
+            elif dr_0[i] > self.box_size[i] / 2:
+                dr_0[i] -= self.box_size[i]
+        # return [dx,dy,...]
+        return dr_0
 
     def doMerge(self):
         isRemoved = False

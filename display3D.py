@@ -26,3 +26,4 @@ ani = matplotlib.animation.FuncAnimation(fig, update_graph, len(df.index),
                                interval=40, blit=False)
 
 plt.show()
+ani.save('demo3D.mp4')

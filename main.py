@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 
 #### Change Parameter Here ####
 box_size = (10, 10)    # shape of Box (W * H)
-particle_num = 30  # Initial Total Number of particle
+particle_num = 100  # Initial Total Number of particle
 max_vi = 0.3   # Init velocity
-delta_t = 0.001 # Time interval
+delta_t = 0.0002 # Time interval
 tstep = 1000    # How many Frame
 
 #### Dont change below if you don't know ## ## 

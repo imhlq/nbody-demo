@@ -8,9 +8,9 @@ import pandas as pd
 box_size = (10, 10, 10)    # shape of Box (W * H)
 particle_num = 50  # Initial Total Number of particle
 max_vi = 1.0   # Init velocity
-delta_t = 0.01 # Time interval
-tstep = 100    # How many Frame
-n_time = 1      # how many update to get one frame
+delta_t = 0.005 # Time interval
+tstep = 1000    # How many Frame
+n_time = 2      # how many update to get one frame
 # ---
 Soften_length = 0.1
 Hubble_friction_constant = 0.5

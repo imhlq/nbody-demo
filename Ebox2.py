@@ -45,6 +45,8 @@ class ExperimentBox:
     k_b = 1
     G = 1   # Gravitation Constant
     h_f = 0.5 # hubble friction parameter
+
+    soften_length = 0.1
     # -----------------
     # --- something ---
     particles = []
@@ -120,11 +122,17 @@ class ExperimentBox:
                     anti = None
             # =====================================
             # initial mass(follow uniform mass function)
-            #newParticle.m = np.random.uniform(1, 10)
+            newParticle.m = self.m
 
             # Append to System
             self.particles.append(newParticle)
         print('Particles initization finished.')
+
+    def setParameter(self, *, G = 1, m = 1, soften_length=0.1, h_f=0.5):
+        self.G = G
+        self.m = m
+        self.soften_length = soften_length
+        self.h_f = h_f
 
     # Idea From Nvdia Gem3
     def calcRowForce(self, i):
@@ -169,6 +177,10 @@ class ExperimentBox:
         self.time += t
         self.time_n += 1
 
+    def updateN(self, t, n):
+        for _ in range(n):
+            self.update(t)
+
     def hubbleFriction(self, pi):
         # hubble friction
         return - self.h_f * pi.v
@@ -185,11 +197,10 @@ class ExperimentBox:
         # force i to j
         if pi == pj:
             return np.zeros(self.Dim)
-        soften_length = 1.0/10.0 # force softening length
         dr = self.closestDistence(pi, pj) # with cloest distance relation
         dr2 = np.sum(np.power(dr, 2))
         # Plummer core
-        sl2 = soften_length * soften_length
+        sl2 = self.soften_length * self.soften_length
             #if r2 < sl2:    WL: We don't need to distinguish the two case
         return self.G * np.power(dr2 + sl2, -3/2) * (dr)
             #else:

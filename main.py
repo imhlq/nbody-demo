@@ -10,11 +10,18 @@ particle_num = 30  # Initial Total Number of particle
 max_vi = 0.3   # Init velocity
 delta_t = 0.001 # Time interval
 tstep = 100    # How many Frame
+n_time = 1      # how many update to get one frame
+# ---
+Soften_length = 0.1
+Hubble_friction_constant = 0.5
+GravityConstant = 1
+Particle_mass = 1
 
 #### Dont change below if you don't know ## ## 
 
 mybox = ExperimentBox(box_size, potential='Gravity')
 mybox.initParticles(particle_num, max_vi)
+mybox.setParameter(G=GravityConstant, m=Particle_mass, soften_length=Soften_length, h_f=Hubble_friction_constant)
 
 final = []
 for i in range(tstep):
@@ -23,7 +30,7 @@ for i in range(tstep):
     for p in mybox.particles:
         pos.append(p.r)
     final.append({'t':t, 'pos':pos})
-    mybox.update(delta_t)
+    mybox.updateN(delta_t, n_time)
     print(i)
 final = pd.DataFrame(final)
 final.set_index('t', inplace=True)

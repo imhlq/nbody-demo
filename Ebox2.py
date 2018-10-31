@@ -203,7 +203,7 @@ class ExperimentBox:
         # move j to closest position
         dr_0 = pi.r - pj.r
         for i in range(len(dr_0)):
-            if dr_0[i] < self.box_size[i] / 2:
+            if dr_0[i] < - self.box_size[i] / 2:
                 dr_0[i] += self.box_size[i]
             elif dr_0[i] > self.box_size[i] / 2:
                 dr_0[i] -= self.box_size[i]

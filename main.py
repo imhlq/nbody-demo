@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 
 #### Change Parameter Here ####
 box_size = (10, 10)    # shape of Box (W * H)
-particle_num = 400  # Initial Total Number of particle
+particle_num = 30  # Initial Total Number of particle
 max_vi = 0.3   # Init velocity
-delta_t = 0.0001 # Time interval
+delta_t = 0.001 # Time interval
 tstep = 1000    # How many Frame
 
 #### Dont change below if you don't know ## ## 
@@ -44,6 +44,6 @@ def updateFrame(frame, box, delta_t):
     return sca,
 
 
-ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(tstep), interval=10, fargs=(mybox, delta_t), blit=True)
+ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(tstep), interval=20, fargs=(mybox, delta_t), blit=True)
 #plt.show()
 ani.save('demo.mp4')

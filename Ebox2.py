@@ -6,7 +6,7 @@ from multiprocessing import Pool
 
 # Class N-dim Particle
 class Particle:
-    m = 1   # mass
+    m = 0.25   # mass
     def __init__(self, r):
         # deposit static particle by position r
         # r can be any dimension
@@ -44,6 +44,7 @@ class ExperimentBox:
     sigma = 1
     k_b = 1
     G = 1   # Gravitation Constant
+    h_f = 0.5 # hubble friction parameter
     # -----------------
     # --- something ---
     particles = []
@@ -119,7 +120,7 @@ class ExperimentBox:
                     anti = None
             # =====================================
             # initial mass(follow uniform mass function)
-            newParticle.m = np.random.uniform(1, 10)
+            #newParticle.m = np.random.uniform(1, 10)
 
             # Append to System
             self.particles.append(newParticle)
@@ -149,9 +150,11 @@ class ExperimentBox:
         # copy up-right to down-left
         # calc force by sum column
         sumMatrix = ForceMatrix.sum(axis=0)
-        
+
         for j in range(self.particle_num):
-            self.particles[j].giveAccForce(sumMatrix[j])
+            pj = self.particles[j]
+            sumMatrix[j] += self.hubbleFriction(pj)   # Friction Terms
+            pj.giveAccForce(sumMatrix[j])
     
     def update(self, t):
         # update one frame by time interval t
@@ -180,14 +183,14 @@ class ExperimentBox:
         # force i to j
         if pi == pj:
             return np.zeros(self.Dim)
-        soften_length = 1/20 # force softening length
+        soften_length = 1.0/10.0 # force softening length
         r2 = np.sum(np.power(pi.r - pj.r, 2))
         # Plummer core
         sl2 = soften_length * soften_length
-        if r2 < sl2:
-            return self.G * np.power(r2 + sl2, -3/2) * (pi.r - pj.r)
-        else:
-            return self.G * np.power(r2, -3/2) * (pi.r - pj.r)
+            #if r2 < sl2:    WL: We don't need to distinguish the two case
+        return self.G * np.power(r2 + sl2, -3/2) * (pi.r - pj.r)
+            #else:
+            #return self.G * np.power(r2, -3/2) * (pi.r - pj.r)
     # ========================================================================
     # ========================================================================
 
@@ -219,3 +222,7 @@ class ExperimentBox:
                     break
             if isRemoved: break
         if isRemoved: self.doMerge()
+
+    def hubbleFriction(self, pi):
+        # hubble friction
+        return - self.h_f * pi.v

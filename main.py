@@ -4,13 +4,13 @@ import matplotlib.animation as animation
 import matplotlib.pyplot as plt
 
 #### Change Parameter Here ####
-box_size = (20, 20)    # shape of Box (W * H)
-particle_num = 100  # Initial Total Number of particle
-max_vi = 1.5    # Init velocity
-delta_t = 0.005 # Time interval
-tstep = 1000    # Frame
+box_size = (10, 10)    # shape of Box (W * H)
+particle_num = 400  # Initial Total Number of particle
+max_vi = 0.3   # Init velocity
+delta_t = 0.00001 # Time interval
+tstep = 1000    # How many Frame
 
-#### Dont change below if you don't know #### 
+#### Dont change below if you don't know ## ## 
 
 mybox = ExperimentBox(box_size, potential='Gravity')
 mybox.initParticles(particle_num, max_vi)
@@ -32,17 +32,18 @@ def updateFrame(frame, box, delta_t):
         xdata.append(p.r[0])
         ydata.append(p.r[1])
         # size
-        s = 10 * p.m
+        s = 15 * p.m
         sdata.append(s)
     data = np.c_[xdata, ydata]
     sca.set_offsets(data)
     sca._sizes = sdata
     text.set_text('%.2f' % mybox.time)
-    box.update(delta_t) # update
+    for i in range(1,5):
+        box.update(delta_t) # update
     print(frame)
     return sca,
 
 
-ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(1, tstep), interval=20, fargs=(mybox, delta_t), blit=True)
+ani = animation.FuncAnimation(fig, updateFrame, frames=np.arange(1, tstep), interval=10, fargs=(mybox, delta_t), blit=True)
 #plt.show()
 ani.save('demo.mp4')

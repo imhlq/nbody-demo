@@ -6,14 +6,14 @@ import pandas as pd
 
 #### Change Parameter Here ####
 box_size = (10, 10, 10)    # shape of Box (W * H)
-particle_num = 50  # Initial Total Number of particle
+particle_num = 100  # Initial Total Number of particle
 max_vi = 1.0   # Init velocity
 delta_t = 0.005 # Time interval
-tstep = 1000    # How many Frame
+tstep = 2000    # How many Frame
 n_time = 2      # how many update to get one frame
 # ---
 Soften_length = 0.1
-Hubble_friction_constant = 0.5
+Hubble_time_normal = 1
 GravityConstant = 1
 Particle_mass = 0.25
 
@@ -21,7 +21,7 @@ Particle_mass = 0.25
 
 mybox = ExperimentBox(box_size, potential='Gravity')
 mybox.initParticles(particle_num, max_vi)
-mybox.setParameter(G=GravityConstant, m=Particle_mass, soften_length=Soften_length, h_f=Hubble_friction_constant)
+mybox.setParameter(G=GravityConstant, m=Particle_mass, soften_length=Soften_length, h_t=Hubble_time_normal)
 
 final = []
 for i in range(tstep):

@@ -19,11 +19,11 @@ def update_graph(num):
     t = df.index[num]
     data = df['pos'][t]
     graph._offsets3d = (data[0], data[1], data[2])
-    title.set_text('3D N-body, time={}'.format(num))
+    title.set_text('3D N-body, time={0:.2f}'.format(num * 0.01))
 
 
-ani = matplotlib.animation.FuncAnimation(fig, update_graph, len(df.index), 
-                               interval=40, blit=False)
+ani = matplotlib.animation.FuncAnimation(fig, update_graph, len(df.index),
+                               interval=10, blit=False)
 
-plt.show()
+#plt.show()
 ani.save('demo3D.mp4')

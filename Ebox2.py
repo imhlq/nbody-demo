@@ -129,11 +129,11 @@ class ExperimentBox:
             self.particles.append(newParticle)
         print('Particles initization finished.')
 
-    def setParameter(self, *, G = 1, m = 1, soften_length=0.1, h_f=0.5):
+    def setParameter(self, *, G = 1, m = 1, soften_length=0.1, h_t=1):
         self.G = G
         self.m = m
         self.soften_length = soften_length
-        self.h_f = h_f
+        self.h_t = h_t
 
     # Idea From Nvdia Gem3
     def calcRowForce(self, i):
@@ -162,7 +162,10 @@ class ExperimentBox:
 
         for j in range(self.particle_num):
             pj = self.particles[j]
+            # == Motion Equation ==
+            sumMatrix[j] *= np.power(self.time + self.h_t, -4./3.)   # comoving gravity
             sumMatrix[j] += self.hubbleFriction(pj)   # Friction Terms
+            # == ==
             pj.giveAccForce(sumMatrix[j])
     
     def update(self, t):
@@ -184,7 +187,7 @@ class ExperimentBox:
 
     def hubbleFriction(self, pi):
         # hubble friction
-        return - self.h_f * pi.v
+        return - (4 / 3) * np.power(self.time + self.h_t, -1.0) * pi.v
     # ===========================================================================
     # ============ Type of Force ================================================
     def Lennar_Force(self, pi, pj):
@@ -202,10 +205,8 @@ class ExperimentBox:
         dr2 = np.sum(np.power(dr, 2))
         # Plummer core
         sl2 = self.soften_length * self.soften_length
-            #if r2 < sl2:    WL: We don't need to distinguish the two case
         return self.G * np.power(dr2 + sl2, -3/2) * (dr)
-            #else:
-            #return self.G * np.power(r2, -3/2) * (pi.r - pj.r)
+
     # ========================================================================
     # ========================================================================
 

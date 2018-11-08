@@ -7,9 +7,9 @@ import pandas as pd
 #### Change Parameter Here ####
 box_size = (10, 10, 10)    # shape of Box (W * H)
 particle_num = 100  # Initial Total Number of particle
-max_vi = 1.0   # Init velocity
+max_vi = 0.3   # Init velocity
 delta_t = 0.005 # Time interval
-tstep = 2000    # How many Frame
+tstep = 1000    # How many Frame
 n_time = 2      # how many update to get one frame
 # ---
 Soften_length = 0.1

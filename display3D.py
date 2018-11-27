@@ -25,5 +25,5 @@ def update_graph(num):
 ani = matplotlib.animation.FuncAnimation(fig, update_graph, len(df.index),
                                interval=10, blit=False)
 
-#plt.show()
-ani.save('demo3D.mp4', dpi=300)
+plt.show()
+#ani.save('demo3D.mp4', dpi=300)

@@ -2,7 +2,7 @@
 # Version 2
 
 import numpy as np
-from multiprocessing import Pool
+from kernel import GForce
 
 # Class N-dim Particle
 class Particle:
@@ -124,7 +124,6 @@ class ExperimentBox:
             # =====================================
             # initial mass(follow uniform mass function)
             newParticle.m = self.m
-
             # Append to System
             self.particles.append(newParticle)
         print('Particles initization finished.')
@@ -143,20 +142,20 @@ class ExperimentBox:
             row_data[j] = self.force(pi, self.particles[j]) # get N*dim array
         return row_data
 
-    def calcForces(self, Parallal=False):
-        if Parallal:
-            # Multi-core Parallal calculation! Too slow??!! Why!
-            pool = Pool()
-            ForceMatrix = pool.map(self.calcRowForce, range(self.particle_num))
-            pool.close()
-            pool.join() # sync (wait terminate)
-            # Calculate over
+    def calcForces(self, CUDA=False):
+        if CUDA:
+            # GPU accerate
+            
+            PosMatrix = [p.r for p in self.particles]
+            ForceMatrix = GForce(PosMatrix)
+            ForceMatrix = np.array(ForceMatrix)
         else:
             ForceMatrix = list(map(self.calcRowForce, range(self.particle_num)))
 
-        ForceMatrix = np.array(ForceMatrix)
-        ForceMatrix += - np.transpose(ForceMatrix, axes=(1, 0, 2))    # assume diag always zero
-        # copy up-right to down-left
+            ForceMatrix = np.array(ForceMatrix)
+            ForceMatrix += - np.transpose(ForceMatrix, axes=(1, 0, 2))    # assume diag always zero
+            # copy up-right to down-left
+
         # calc force by sum column
         sumMatrix = ForceMatrix.sum(axis=0)
 

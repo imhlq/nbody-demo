@@ -5,14 +5,14 @@
 
 import math
 import numpy as np
-from numba import cuda, f4
+from numba import cuda, f8
 
 # Parameter
 Smothen_length = 0.1
 Boxsize = 10
 G = 1
-N = 10240
-p = 32
+N = 128
+p = 8
 
 ThreadPerBlock = p
 BlockPerGrid = N // p
@@ -32,7 +32,7 @@ def closestDistence(p1x, p2x, dx):
 
 @cuda.jit(device=True)
 def bodybody(pi, pj, acc):
-    dr = cuda.local.array(3, dtype=f4)
+    dr = cuda.local.array(3, dtype=f8)
     closestDistence(pi, pj, dr)
     dr2 = dr[0] * dr[0] + dr[1] * dr[1] + dr[2] * dr[2]
     
@@ -48,7 +48,7 @@ def bodybody(pi, pj, acc):
 @cuda.jit(device=True)
 def tile_calculate(myPosition, shPosition, accel, start_i):
     for i in range(cuda.blockDim.x):
-        _acc = cuda.local.array(shape=3, dtype=f4)
+        _acc = cuda.local.array(shape=3, dtype=f8)
         bodybody(myPosition, shPosition[i], _acc)
         for k in range(3):
             accel[start_i + i][k] = _acc[k]
@@ -56,12 +56,12 @@ def tile_calculate(myPosition, shPosition, accel, start_i):
 
 @cuda.jit
 def force_kernel(plist, accel):
-    shPosition = cuda.shared.array(shape=(p, 3), dtype=f4)
+    shPosition = cuda.shared.array(shape=(p, 3), dtype=f8)
     gtid = cuda.blockDim.x * cuda.blockIdx.x + cuda.threadIdx.x
     tile = 0
     myPosition = plist[gtid]
 
-    acc = cuda.local.array(shape=(N, 3), dtype=f4)
+    acc = cuda.local.array(shape=(N, 3), dtype=f8)
     for i in range(0, N, p):
         idx = tile * cuda.blockDim.x + cuda.threadIdx.x
         for k in range(3):
@@ -77,14 +77,14 @@ def force_kernel(plist, accel):
 
 
 
-def Kernel(PosMatrix):
+def GForce(PosMatrix):
     # input  PosMatrix: N * 3
     # Output ForceMatrix: N * N * 3
     Accel = np.zeros((N, N, 3))
     force_kernel[BlockPerGrid,ThreadPerBlock](PosMatrix, Accel)
     return Accel
 
-'''Speed Test Here.
+#Speed Test Here.
 PosMatrix = np.random.rand(N, 3)
 
 import timeit
@@ -92,4 +92,3 @@ start = timeit.default_timer()
 FM = Kernel(PosMatrix)
 elpse = timeit.default_timer() - start
 print(elpse)
-'''

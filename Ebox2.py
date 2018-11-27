@@ -197,11 +197,6 @@ class ExperimentBox:
             return 24 * self.epsion / self.sigma * (2 * (self.sigma/r)**13 - (self.sigma/r)**7)
         return 0
 
-    @vectorize(["float32(float32, float32, float32)"])
-    def gpu3d_Gravity_Force(self, drx, dry, drz):
-        # force i to j
-        return self.G * (drx * drx * dry * dry * drz * drz + self.soften_length)
-
     def Gravity_Force(self, pi, pj):
         # force i to j
         if pi == pj:

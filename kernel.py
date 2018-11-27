@@ -11,7 +11,7 @@ from numba import cuda, f4
 Smothen_length = 0.1
 Boxsize = 10
 G = 1
-N = 1024
+N = 10240
 p = 32
 
 ThreadPerBlock = p
@@ -78,10 +78,18 @@ def force_kernel(plist, accel):
 
 
 def Kernel(PosMatrix):
+    # input  PosMatrix: N * 3
+    # Output ForceMatrix: N * N * 3
     Accel = np.zeros((N, N, 3))
     force_kernel[BlockPerGrid,ThreadPerBlock](PosMatrix, Accel)
     return Accel
 
+'''Speed Test Here.
 PosMatrix = np.random.rand(N, 3)
+
+import timeit
+start = timeit.default_timer()
 FM = Kernel(PosMatrix)
-print(FM)
+elpse = timeit.default_timer() - start
+print(elpse)
+'''

@@ -6,7 +6,7 @@ from kernel import GForce
 
 # Class N-dim Particle
 class Particle:
-    m = 0.25   # mass
+    m = 1   # mass
     def __init__(self, r):
         # deposit static particle by position r
         # r can be any dimension
@@ -76,7 +76,7 @@ class ExperimentBox:
         # Running Parameter
         self.time = 0   # actual time
         self.time_n = 0 # times of update
-        
+        print('Environment initization finished.')
 
 
     # ==================================================================
@@ -142,11 +142,10 @@ class ExperimentBox:
             row_data[j] = self.force(pi, self.particles[j]) # get N*dim array
         return row_data
 
-    def calcForces(self, CUDA=False):
+    def calcForces(self, CUDA=True):
         if CUDA:
             # GPU accerate
-            
-            PosMatrix = [p.r for p in self.particles]
+            PosMatrix = np.array([p.r for p in self.particles])
             ForceMatrix = GForce(PosMatrix)
             ForceMatrix = np.array(ForceMatrix)
         else:

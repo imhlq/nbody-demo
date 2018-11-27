@@ -7,12 +7,12 @@ import math
 import numpy as np
 from numba import cuda, f8
 
-# Parameter
+# Parameter(Don't forget here!)
 Smothen_length = 0.1
-Boxsize = 10
+Boxsize = 20
 G = 1
-N = 128
-p = 8
+N = 1024
+p = 32
 
 ThreadPerBlock = p
 BlockPerGrid = N // p
@@ -76,7 +76,6 @@ def force_kernel(plist, accel):
             accel[gtid][k][kk] = acc[k][kk]
 
 
-
 def GForce(PosMatrix):
     # input  PosMatrix: N * 3
     # Output ForceMatrix: N * N * 3
@@ -84,11 +83,11 @@ def GForce(PosMatrix):
     force_kernel[BlockPerGrid,ThreadPerBlock](PosMatrix, Accel)
     return Accel
 
-#Speed Test Here.
+'''#Speed Test Here.
 PosMatrix = np.random.rand(N, 3)
 
 import timeit
 start = timeit.default_timer()
 FM = Kernel(PosMatrix)
 elpse = timeit.default_timer() - start
-print(elpse)
+print(elpse)'''

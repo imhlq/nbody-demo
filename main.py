@@ -4,18 +4,18 @@ import pandas as pd
 # import matplotlib.animation as animation
 # import matplotlib.pyplot as plt
 
-#### Change Parameter Here ####
-box_size = (10, 10, 10)    # shape of Box (W * H)
-particle_num = 100  # Initial Total Number of particle
+#### Change Parameter Here (And kernel.py if use CUDA) ####
+box_size = (20, 20, 20)    # shape of Box (W * H)
+particle_num = 1024  # Initial Total Number of particle
 max_vi = 0.3   # Init velocity
-delta_t = 0.005 # Time interval
+delta_t = 0.01 # Time interval
 tstep = 1000    # How many Frame
-n_time = 2      # how many update to get one frame
+n_time = 1      # how many update to get one frame
 # ---
 Soften_length = 0.1
 Hubble_time_normal = 1
 GravityConstant = 1
-Particle_mass = 0.25
+Particle_mass = 1
 
 #### Dont change below if you don't know ## ## 
 

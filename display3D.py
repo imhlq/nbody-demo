@@ -13,7 +13,7 @@ title = ax.set_title('3D N-body')
 
 t0 = df.index[0]
 data=df['pos'][t0]
-graph = ax.scatter(data[0], data[1], data[2])
+graph = ax.scatter(data[0], data[1], data[2],s=2)
 
 def update_graph(num):
     t = df.index[num]
@@ -23,7 +23,7 @@ def update_graph(num):
 
 
 ani = matplotlib.animation.FuncAnimation(fig, update_graph, len(df.index),
-                               interval=20, blit=False)
+                               interval=10, blit=False)
 
 #plt.show()
 ani.save('demo3D.mp4', dpi=300)

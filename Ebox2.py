@@ -16,9 +16,12 @@ class Particle:
         # previous pos
         self.pr = None
 
-    def giveAccForce(self, f):
+    def giveForce(self, f):
         # force array
         self.a = f / self.m
+    
+    def giveAcc(self, acc):
+        self.a = acc
 
     def updatePos(self, t, bounds):
         # energy conservation verlet
@@ -164,7 +167,7 @@ class ExperimentBox:
             sumMatrix[j] *= np.power(self.time + self.h_t, -4./3.)   # comoving gravity
             sumMatrix[j] += self.hubbleFriction(pj)   # Friction Terms
             # == ==
-            pj.giveAccForce(sumMatrix[j])
+            pj.giveForce(sumMatrix[j])
     
     def update(self, t):
         # update one frame by time interval t
@@ -203,7 +206,7 @@ class ExperimentBox:
         dr2 = np.sum(np.power(dr, 2))
         # Plummer core
         sl2 = self.soften_length * self.soften_length
-        return self.G * np.power(dr2 + sl2, -3/2) * (dr)
+        return self.G * np.power(dr2 + sl2, -3/2) * (dr) * self.m * self.m
 
     # ========================================================================
     # ========================================================================

@@ -8,17 +8,19 @@ import numpy as np
 from numba import cuda, f8
 
 # Parameter(Don't forget here!)
-Smothen_length = 0.1
-Boxsize = 20
+Smothen_length = 0.01
+Boxsize = 10
 G = 1
-N = 1024
+N = 2048
 p = 32
+m = 0.05     # only for same mass
 
 ThreadPerBlock = p
 BlockPerGrid = N // p
 
 # Pre-compute
 Smoth_2 = Smothen_length * Smothen_length
+m_2 = m * m
 
 # Kernal
 @cuda.jit(device=True)
@@ -38,7 +40,7 @@ def bodybody(pi, pj, acc):
     
     distSqr  = dr2 + Smoth_2
     insDis = 1.0/math.sqrt(distSqr * distSqr * distSqr)
-    s = G * insDis
+    s = G * insDis * m_2
     
     acc[0] = dr[0] * s
     acc[1] = dr[1] * s

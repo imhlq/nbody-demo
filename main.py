@@ -5,23 +5,23 @@ import pandas as pd
 # import matplotlib.pyplot as plt
 
 #### Change Parameter Here (And kernel.py if use CUDA) ####
-box_size = (20, 20, 20)    # shape of Box (W * H)
-particle_num = 1024  # Initial Total Number of particle
-max_vi = 0.3   # Init velocity
-delta_t = 0.01 # Time interval
-tstep = 1000    # How many Frame
-n_time = 1      # how many update to get one frame
+box_size = (10, 10, 10)    # shape of Box (W * H)
+particle_num = 2048  # Initial Total Number of particle
+max_vi = 0.2   # Init velocity
+delta_t = 0.05 # Time interval
+tstep = 2000    # How many Frame
+n_time = 2      # how many update to get one frame
 # ---
-Soften_length = 0.1
+Soften_length = 0.01
 Hubble_time_normal = 1
 GravityConstant = 1
-Particle_mass = 1
+Particle_mass = 0.05 # mass of every particle
 
 #### Dont change below if you don't know ## ## 
 
 mybox = ExperimentBox(box_size, potential='Gravity')
-mybox.initParticles(particle_num, max_vi)
 mybox.setParameter(G=GravityConstant, m=Particle_mass, soften_length=Soften_length, h_t=Hubble_time_normal)
+mybox.initParticles(particle_num, max_vi)
 
 final = []
 for i in range(tstep):

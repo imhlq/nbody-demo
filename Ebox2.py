@@ -24,7 +24,7 @@ class Particle:
         self.a = acc
 
     def updatePos(self, t, bounds):
-        # energy conservation verlet
+        # Verlet algorithm
         if self.pr is None:
             # First Time
             self.pr = self.r - self.v * t

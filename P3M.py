@@ -1,3 +1,7 @@
 # Use Fourier to solve it in Periodic Condition
 
-# Fourier series
+# 1. Grid Box
+
+# 2. Density Grid
+
+# 3.
